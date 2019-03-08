@@ -1,0 +1,5 @@
+int32 crashPredicted
+float32 crashPredictTime
+float32 relImpactVelocity
+int32 crashObjectID
+int32 criticality

@@ -1,0 +1,6 @@
+<launch>
+  <node pkg="socket_can" type="can_bridge" name="can_bridge" output="screen">
+  <rosparam command="load" file="$(find socket_can)/params/E100.yaml" />
+  </node>
+	
+</launch>

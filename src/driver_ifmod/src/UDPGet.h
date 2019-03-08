@@ -1,0 +1,178 @@
+#ifndef _UDPGET_H_
+#define _UDPGET_H_
+#include <stdio.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <cstring>
+#include <unistd.h>
+#include <iostream>
+#include <stddef.h>
+
+#include "../include/ifm_types.h"
+#include "../include/example_results.h"
+
+#include "Channels/OD_CH08_1_4.h"
+#include "Channels/OD_CH14_1_5.h"
+#include "Channels/OD_CH20_1_4.h"
+#include "Channels/OD_CH256_1_6.h"
+
+#include "driver_ifmod/calibration_msg.h"
+#include "driver_ifmod/CalibResult.h"
+#include "driver_ifmod/CrashPredictorResult.h"
+#include "driver_ifmod/logic_msg.h"
+#include "driver_ifmod/objectData_t_ch8_msg.h"
+#include "driver_ifmod/ObjectList.h"
+
+namespace Camera
+{
+//const ifm_o3m_uint16_t port = 42000; 
+#define FWVARIANT "OD"
+#define NUM_SENSOR_PIXELS (1024)
+#define NUM_OBJECTS (20)
+typedef ifm_o3m_AlgoIFOutput_ODA1_1_4 Channel8;
+typedef ifm_o3m_SDspFrameCustomerImeas_t_ODD1_1_5 Channel14;
+typedef ifm_o3m_AlgoIFOutputNoDI_ODA2_1_4 Channel20;
+typedef ifm_o3m_Meas_Customer_Data_Type_ODK1_1_6 Channel256;
+// We copy some received data from channel 8 into this structure.
+typedef struct
+{
+    // the distance image from the sensor
+    ifm_o3m_uint16_t distanceData[NUM_SENSOR_PIXELS];
+    // X坐标
+    ifm_o3m_float32_t X[NUM_SENSOR_PIXELS];
+    // Y坐标
+    ifm_o3m_float32_t Y[NUM_SENSOR_PIXELS];
+    // Z坐标
+    ifm_o3m_float32_t Z[NUM_SENSOR_PIXELS];
+    // the pixel flag matrix from the sensor
+    ifm_o3m_uint16_t confidence[NUM_SENSOR_PIXELS];
+    //ampl_norm
+    ifm_o3m_uint16_t ampl_norm[NUM_SENSOR_PIXELS];
+} distanceData_t;
+
+typedef struct 
+{
+    struct
+    {
+        ifm_o3m_sint32_t id;
+        ifm_o3m_sint32_t history;
+        ifm_o3m_sint32_t measured;
+        ifm_o3m_sint32_t type;
+        ifm_o3m_sint32_t age;
+        ifm_o3m_float32_t x1;
+        ifm_o3m_float32_t y1;
+        ifm_o3m_float32_t x2;
+        ifm_o3m_float32_t y2;
+        ifm_o3m_float32_t zMin;
+        ifm_o3m_float32_t zMax;
+        ifm_o3m_float32_t vX;
+        ifm_o3m_float32_t vY;
+        ifm_o3m_float32_t vZ;
+        ifm_o3m_float32_t aX;
+        ifm_o3m_float32_t aY;
+        ifm_o3m_float32_t aZ;
+        ifm_o3m_float32_t existenceProbability;
+        ifm_o3m_float32_t vXQuality;
+        ifm_o3m_float32_t vYQuality;
+        ifm_o3m_float32_t distanceToEgo;
+    } objectList[20];
+    struct
+    {
+        ifm_o3m_sint32_t crashPredicted;
+        ifm_o3m_float32_t crashPredictTime;
+        ifm_o3m_float32_t relImpactVelocity;
+        ifm_o3m_sint32_t crashObjectID;
+        ifm_o3m_sint32_t criticality;
+    } crashPredictorResult;
+} objectData_t_ch8;
+
+typedef struct
+{
+    struct
+    {
+        ifm_o3m_sint32_t calibValid;
+        ifm_o3m_sint32_t calibrationStableCounter;
+        struct
+        {
+            ifm_o3m_float32_t transX;
+            ifm_o3m_float32_t transY;
+            ifm_o3m_float32_t transZ;
+            ifm_o3m_float32_t rotX;
+            ifm_o3m_float32_t rotY;
+            ifm_o3m_float32_t rotZ;
+        } calibResult;
+    } commonCalibrationResult;
+} calibrationResult;
+
+typedef struct
+{
+    ifm_o3m_uint8_t digitalOutput[100];
+    ifm_o3m_float32_t analogOutput[20];
+} logicOutput;
+
+typedef struct 
+{
+    struct
+    {
+        ifm_o3m_sint32_t id;
+        ifm_o3m_float32_t x1;
+        ifm_o3m_float32_t x2;
+    } objectList[20];
+
+} objectData_t;
+
+typedef struct
+{
+    ifm_o3m_uint8_t ObjectListCust_objectDetectionVariant;
+    ifm_o3m_uint8_t Modulation_Frequency_Mode;
+} parameterData_t;
+
+typedef struct
+{
+    ifm_o3m_uint8_t OpMode;
+    ifm_o3m_sint8_t Variant[3];
+    ifm_o3m_float32_t mainTemperature;
+} statusData_t;
+
+
+class UDPGet
+{
+public:
+    UDPGet(){};
+    ~UDPGet(){};
+    void startUDPConnection(int port_number, std::string devip_str);
+    void stopUDPConnection();
+    int Receiver(int channelOfInterest);
+    distanceData_t g_distanceData;
+    objectData_t_ch8 g_objectData_ch8;
+    calibrationResult g_calibrationResult;
+    logicOutput g_logicOutput;
+    objectData_t g_objectData;
+    parameterData_t g_parameterData;
+    statusData_t g_statusData;
+private:
+    int sockfd;
+    struct sockaddr_in saddr;
+    int processPacket(ifm_o3m_sint8_t* currentPacketData,  // payload of the udp packet (without ethernet/IP/UDP header)
+    ifm_o3m_uint32_t currentPacketSize, // size of the udp packet payload
+    ifm_o3m_sint8_t* channelBuffer,      // buffer for a complete channel
+    ifm_o3m_uint32_t channelBufferSize, // size of the buffer for the complete channel
+    ifm_o3m_uint32_t* pos)  ;            // the current pos in the channel buffer
+    int port;
+    std::string devip_str_;
+    in_addr devip_;
+    int processChannel(ifm_o3m_uint32_t channel_no, void* buf, ifm_o3m_uint32_t size);
+    int processChannel8(void* buf, ifm_o3m_uint32_t size);
+    int copyChannel8(Channel8* p);
+    int processChannel14(void* buf, ifm_o3m_uint32_t size);
+    int copyChannel14(Channel14* p);
+    int processChannel20(void* buf, ifm_o3m_uint32_t size);
+    int copyChannel20(Channel20* p);
+    int processChannel256(void* buf, ifm_o3m_uint32_t size);
+    int copyChannel256(Channel256* p);
+
+}; 
+}//namespace Camera
+#endif

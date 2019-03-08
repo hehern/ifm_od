@@ -1,0 +1,5 @@
+<launch>
+  <node pkg="rviz" type="rviz" name="rviz"  args="-d $(find driver_ifmod)/params/ifm.rviz">
+  </node>
+	
+</launch>

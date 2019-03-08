@@ -1,0 +1,6 @@
+channelOfInterest: 8
+frame_id: 'velodyne'
+x_offset: 0
+port_number: 43000
+devip_str: '192.168.250.164'
+pcl_topic: '/IFM/ifm_points_left'

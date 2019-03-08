@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "cctype": "cpp",
+        "cstddef": "cpp",
+        "cstdio": "cpp",
+        "cstdlib": "cpp"
+    }
+}

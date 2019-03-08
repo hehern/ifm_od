@@ -1,0 +1,8 @@
+<launch>
+  <node pkg="driver_ifmod" type="driver_ifmod" name="driver_ifmod1" output="screen">
+  <rosparam command="load" file="$(find driver_ifmod)/params/right.yaml" />
+  </node>
+  <!--node pkg="rviz" type="rviz" name="rviz1"  args="-d $(find driver_ifmod)/params/ifm.rviz"-->
+  <!--/node-->
+	
+</launch>

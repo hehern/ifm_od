@@ -1,0 +1,7 @@
+<launch>
+  <node pkg="obstacle_detect_ifm" type="obstacle_detect_ifm" name="obstacle_detect_ifm" output="screen" respawn="true">
+  <rosparam command="load" file="$(find obstacle_detect_ifm)/params/G2001.yaml" />
+  </node>
+  <node pkg="rviz" type="rviz" name="rviz"  args="-d $(find obstacle_detect_ifm)/params/ifm.rviz">
+  </node>
+</launch>

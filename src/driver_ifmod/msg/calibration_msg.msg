@@ -1,0 +1,4 @@
+std_msgs/Header header
+int32 calibValid
+int32 calibrationStableCounter
+driver_ifmod/CalibResult calibResult

@@ -1,0 +1,28 @@
+frame_id: 'velodyne'
+#1. the parameter of GetFilteredPclWithWindow
+#  KWindowRows
+#  KWindowCols
+#  covariance_threshold_
+#  height_of_hole
+#2. the parameter of GetFilteredPclWithGrid
+#  grid_width
+#  grid_length
+#  covariance_threshold_
+#  max_ground_height_threshold
+#3. the parameter of GetFilteredWithNearestNeighborVariance
+#  covariance_threshold_
+#  max_ground_height_threshold
+#  min_dis_neighbour_points_threshold_
+#4. the parameter of RemoveIsolatedPoints
+#  min_dis_neighbour_points_threshold_
+#  min_num_neighbour_points_threshold_
+
+KWindowRows: 4
+KWindowCols: 4
+covariance_threshold_: 0.04
+grid_width: 1.5
+grid_length: 1.5
+max_ground_height_threshold: 0.3
+height_of_hole: -0.1
+min_dis_neighbour_points_threshold_: 0.2
+min_num_neighbour_points_threshold_: 3

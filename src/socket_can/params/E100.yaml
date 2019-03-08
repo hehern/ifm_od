@@ -1,0 +1,2 @@
+yawrate_topic: '/imu_torso/xsens/data'
+speed_topic: '/Candecode_1/SpeedMilSteer'

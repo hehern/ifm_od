@@ -1,0 +1,74 @@
+#topic name
+ros_default_queue_size: 16
+is_displaying_pcl_: true
+map_frame_id: 'map'
+vehicle_frame_id: 'vehicle'
+obstacle_pcl_topic: 'obstacle_pcl_ifm'
+area_contour_topic: 'area_contour_ifm'
+obstacle_in_which_area_topic: 'obstacle_in_which_area'
+nearest_dis_topic: 'nearest_dis'
+pcl_topic_left: '/IFM/ifm_points_left'
+pcl_topic_right: '/IFM/ifm_points_right'
+speed_topic: 'speed'
+steer_topic: 'steer'
+
+#the parameter of remove ground
+#1. the parameter of GetFilteredPclWithWindow
+#  KWindowRows
+#  KWindowCols
+#  covariance_threshold_
+#  height_of_hole
+#2. the parameter of GetFilteredPclWithGrid
+#  grid_width
+#  grid_length
+#  covariance_threshold_
+#  max_ground_height_threshold
+#3. the parameter of GetFilteredWithNearestNeighborVariance
+#  covariance_threshold_
+#  max_ground_height_threshold
+#  min_dis_neighbour_points_threshold_
+#  min_num_neighbour_points_threshold_
+#4. the parameter of RemoveIsolatedPoints
+#  min_dis_neighbour_points_threshold_
+#  min_num_neighbour_points_threshold_
+KWindowRows: 3
+KWindowCols: 3
+covariance_threshold_: 0.06
+grid_width: 1.0
+grid_length: 1.0
+max_ground_height_threshold: 0.3
+height_of_hole: -0.1
+min_dis_neighbour_points_threshold_: 0.2
+min_num_neighbour_points_threshold_: 3
+
+#the parameter of area list
+area_list: [stop_1]
+wheelbase: 2.84
+front_overhang: 1.1
+rear_overhang: 1.1
+width: 1.5
+height: 1.95
+
+stop_1_base_length: 4.0
+stop_1_base_width: 1.9
+stop_1_min_z: -0.1
+stop_1_max_z: 1.2
+stop_1_length_k_speed: 0.5 # unit: m/(m/s)
+stop_1_length_k_steer: -0.1 # unit: m/deg
+stop_1_num_threshold: 5
+stop_1_color_r: 1.0
+stop_1_color_g: 0.0
+stop_1_color_b: 0.0
+stop_1_color_a: 1.0
+
+#the parameter of get the distance of the nearest obstacle
+neardis_num_threshold: 4
+neardis_dis_threshold: 0.3
+
+#the parameter of pcl_clip
+roi_x_min: 4.2
+roi_x_max: 10.0
+roi_y_min: -5.0
+roi_y_max: 5.0
+roi_z_min: -1.0
+roi_z_max: 10.0
